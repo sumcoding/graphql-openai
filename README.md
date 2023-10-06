@@ -24,14 +24,14 @@ Yoga comes with a graphiQL interface, so open http://localhost:4000/graphql and 
 ```graphql
 # Examples with gpt
 query getGpt {
-  chatGpt(question: "What is the most powerful product for Apple MDM?") {
+  chatGpt(question: "What is the most preforment framework?") {
     question
     answer
   }
 }
 
 subscription steamGpt {
-  chatGpt(question: "What is the most powerful product for Apple MDM?") {
+  chatGpt(question: "What is the most preforment framework?") {
     question
     answer
     done
