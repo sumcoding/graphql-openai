@@ -58,8 +58,7 @@ export const chat_completion = async (
   }
 ) => {
   const completion = await openai.chat.completions.create(config)
-  const result = completion.choices[0]?.message
-  return { 'question': question, answer: result }
+  return { 'question': question, answer: completion.choices[0]?.message.content }
 }
 
 export const stream_completion = async (
