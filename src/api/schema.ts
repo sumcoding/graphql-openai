@@ -1,75 +1,45 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { animals, chatGpt } from './generate';
-import { createPubSub } from 'graphql-yoga'
-
-const pubSub = createPubSub()
+import { chat_completion, completion, stream_chat_completion, stream_completion } from './generate'
 
 const typeDefinitions = /* GraphQL */ `
   type Response {
     question: String!
     answer: String!
-    done: Boolean
   }
   type Query {
     animals(question: String!): Response!
-    chatGpt(question: String!): Response!
+    chat(question: String!): Response!
   }
   type Subscription {
     animals(question: String!): Response!
-    chatGpt(question: String!): Response!
+    chat(question: String!): Response!
   }
 `
 
 const resolvers = {
   Query: {
-    animals: async (_: any, { question }: { question: string }) => animals(question),
-    chatGpt: async (_: any, { question }: { question: string }) => chatGpt(question)
+    animals: async (_: any, { question }: { question: string }) => completion(question),
+    chat: async (_: any, { question }: { question: string }) => chat_completion(question)
   },
   Subscription: {
     animals: {
-      // This will return the value on every 1 sec until it reaches 0
       subscribe: async function* (_: any, { question }: { question: string }) {
-        await animals(question, pubSub)
-        const sub = pubSub.subscribe('stream');
-        let d: boolean | undefined = false;
-        const { value } = await sub.next()
-        d = value.done;
-        let v = value;
-        yield v;
-        while (!d) {
-          const { value } = await sub.next()
-          v = { ...value, answer: v.answer + value.answer }
-
-          yield v;
-          d = v.done;
-          if (d) {
-            console.log('FINAL VALUE:', v)
-            break;
-          }
+        const stream = await stream_completion(question)
+        let answer = ''
+        for await (const part of stream) {
+          answer += part.choices[0].text
+          yield { answer, question }
         }
       },
       resolve: (payload: any) => payload
     },
-    chatGpt: {
-      // This will return the value on every 1 sec until it reaches 0
+    chat: {
       subscribe: async function* (_: any, { question }: { question: string }) {
-        await chatGpt(question, pubSub)
-        const sub = pubSub.subscribe('stream');
-        let d: boolean | undefined = false;
-        const { value } = await sub.next()
-        d = value.done;
-        let v = value;
-        yield v;
-        while (!d) {
-          const { value } = await sub.next()
-          v = { ...value, answer: v.answer + value.answer }
-
-          yield v;
-          d = v.done;
-          if (d) {
-            console.log('FINAL VALUE:', v)
-            break;
-          }
+        const stream = await stream_chat_completion(question)
+        let answer = ''
+        for await (const part of stream) {
+          answer += part.choices[0].delta.content
+          yield { answer, question }
         }
       },
       resolve: (payload: any) => payload

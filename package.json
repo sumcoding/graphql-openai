@@ -11,12 +11,12 @@
   "keywords": ["graphql", "gpt", "openai", "chat", "ai", "bot"],
   "dependencies": {
     "@graphql-tools/schema": "^10.0.0",
-    "@graphql-yoga/plugin-graphql-sse": "^2.0.1",
-    "dotenv": "^16.3.0",
-    "graphql": "^16.6.0",
-    "graphql-sse": "^2.1.4",
-    "graphql-yoga": "^4.0.1",
-    "openai": "^3.3.0"
+    "@graphql-yoga/plugin-graphql-sse": "^2.0.5",
+    "dotenv": "^16.3.1",
+    "graphql": "^16.8.1",
+    "graphql-sse": "^2.3.0",
+    "graphql-yoga": "^4.0.5",
+    "openai": "^4.11.1"
   },
   "devDependencies": {
     "@types/node": "20.3.1",
