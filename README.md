@@ -22,35 +22,30 @@ Yoga comes with a graphiQL interface, so open http://localhost:4000/graphql and 
 ## Graphql Requests
 
 ```graphql
-# Examples with gpt
-query getGpt {
-  chatGpt(question: "What is the most performant framework?") {
+subscription chat_stream {
+  chat(question: "What is the best framework?") {
     question
     answer
   }
 }
 
-subscription steamGpt {
-  chatGpt(question: "What is the most performant framework?") {
-    question
+subscription animals_stream {
+  animals(question: "Parrot") {
     answer
-    done
   }
 }
 
-# Examples with davinci
-query animal {
-  animals(question: "dog") {
+query chat {
+  chat(question: "What is the best framework?") {
     question
     answer
   }
 }
 
-subscription animalStream {
-  animals(question: "tiger") {
-    question
+query animals {
+  animals(question: "Dog") {
     answer
-    done
   }
 }
+
 ```
